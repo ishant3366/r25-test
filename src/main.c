@@ -1,11 +1,10 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <serial.h>
 #include <parsing.h>
 
 int main(int argc, char** argv) {
-    if (argc < 3) {
-        fprintf(stderr, "Usage: %s <SBUS_PORT> <SABERTOOTH_PORT>\n", argv[0]);
+    if (argc != 3) {
+        printf("Usage: %s <SBUS_port> <Sabertooth_port>\n", argv[0]);
         return 1;
     }
 
@@ -16,7 +15,7 @@ int main(int argc, char** argv) {
     FILE *sabertooth;
 
     // to store sbus packets
-    uint8_t sbus_packet[15];
+    uint8_t sbus_packet[25]; // Adjust the size if necessary
 
     // to store value of individual RC channel
     uint16_t *channel;
@@ -26,32 +25,28 @@ int main(int argc, char** argv) {
 
     // opening serial port for serial communication with Sabertooth and SBUS
     sbus = open_file(port_name_1, "rb");
-    if (sbus == NULL) {
-        perror("Failed to open SBUS port");
-        return 1;
-    }
     sabertooth = open_file(port_name_2, "w+");
-    if (sabertooth == NULL) {
-        perror("Failed to open Sabertooth port");
-        close_file(sbus);
+    
+    if (sbus == NULL || sabertooth == NULL) {
         return 1;
     }
-
+    
     // read data from RC transmitter using sbus
-    read_SBUS(sbus_packet, sizeof(sbus_packet), sbus);
+    read_SBUS(sbus_packet, sizeof(uint8_t), 25, sbus);
 
     // parsing sbus packet
     channel = parse_buffer(sbus_packet);
 
-    // get pwm range for Sabertooth 1			 
+    // get pwm range for Sabertooth 1
     pwm = interpolation(channel[0]);
 
     // write data to Sabertooth 1
-    write_to_SB(sabertooth, "%d", pwm);
+    write_to_SB(sabertooth, "%d\n", pwm);
 
-    // closing all serial ports
+    // closing all serial port 
     close_file(sbus);
     close_file(sabertooth);
 
     return 0;
 }
+
