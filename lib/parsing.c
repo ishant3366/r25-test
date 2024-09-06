@@ -1,29 +1,28 @@
 #include <stdint.h>
 #include <parsing.h>
-#include <math.h>
 
+// Implement the interpolation function
 int interpolation(uint16_t channel) {
+    const uint16_t input_min = 0;    // Minimum value of the input channel
+    const uint16_t input_max = 2047; // Maximum value of the input channel
+    const int output_min = 0;        // Minimum PWM value
+    const int output_max = 255;      // Maximum PWM value
 
-    const uint16_t input_min = 0;   
-    const uint16_t input_max = 2047;
-    const int output_min = 0;       
-    const int output_max = 255;      
+    // Interpolate the channel value into the PWM range
+    int pwm = (int)((((float)(channel - input_min) / (input_max - input_min)) * (output_max - output_min)) + output_min);
 
-    
-    int output = ((channel - input_min) * (output_max - output_min)) / (input_max - input_min) + output_min;
-
-    return output;
+    return pwm;
 }
 
-
+// Implement the parse_buffer function
 uint16_t *parse_buffer(uint8_t buff[]) { 
-  
+    // to store channels
     static uint16_t channel[16];
 
-
+    // masking byte shiftings bits (value in hexa '0x07FF')
     uint16_t mask = 0x7ff;
 
-  
+    // creating channels 
     channel[0]  = ((buff[1] | buff[2]<<8)                 & mask);
     channel[1]  = ((buff[2]>>3 | buff[3]<<5)              & mask);
     channel[2]  = ((buff[3]>>6 | buff[4]<<2 | buff[5]<<10) & mask);
@@ -43,5 +42,6 @@ uint16_t *parse_buffer(uint8_t buff[]) {
 
     return channel;
 }
+
 
 
