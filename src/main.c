@@ -4,38 +4,54 @@
 #include <parsing.h>
 
 int main(int argc, char** argv) {
-	char *port_name_1 = argv[1]; // SBUS 
-	char *port_name_2 = argv[2]; // Sabertooth1
+    if (argc < 3) {
+        fprintf(stderr, "Usage: %s <SBUS_PORT> <SABERTOOTH_PORT>\n", argv[0]);
+        return 1;
+    }
 
-	FILE *sbus; 
-	FILE *sabertooth;
+    char *port_name_1 = argv[1]; // SBUS 
+    char *port_name_2 = argv[2]; // Sabertooth1
 
-	// to store sbus packets
-	uint8_t sbus_packet[15];
+    FILE *sbus; 
+    FILE *sabertooth;
 
-	// to store value of indiviual RC channel
-	uint16_t *channel;
+    // to store sbus packets
+    uint8_t sbus_packet[15];
 
-	// pwm value after interpolation 
-	int pwm;
+    // to store value of individual RC channel
+    uint16_t *channel;
 
-	// opening serial port for serial communication with Sabertooth and SBUS
-	sbus = open_file(port_name_1, "rb");
-	sabertooth = open_file(port_name_2, "w+");
-	
-	// read data from RC transmitter using sbus
-	read_SBUS(sbus_packet, uint8_t, 25, sbus);
+    // pwm value after interpolation 
+    int pwm;
 
-	// parsing sbus packet
-	channel = parse_buffer(sbus_packet);
+    // opening serial port for serial communication with Sabertooth and SBUS
+    sbus = open_file(port_name_1, "rb");
+    if (sbus == NULL) {
+        perror("Failed to open SBUS port");
+        return 1;
+    }
+    sabertooth = open_file(port_name_2, "w+");
+    if (sabertooth == NULL) {
+        perror("Failed to open Sabertooth port");
+        close_file(sbus);
+        return 1;
+    }
 
-	// get pwm range for Sabertooth 1			 
-	pwm = interpolation(channel[0]);		//  write								
-							//  to
-	// write data to Sabertooth 1			//  sabertooth	
-	write_to_SB(sabertooth, "%d", pwm);		
+    // read data from RC transmitter using sbus
+    read_SBUS(sbus_packet, sizeof(sbus_packet), sbus);
 
-	// closing all serial port 
-	close_file(sbus);
-	close_file(sabertooth);
+    // parsing sbus packet
+    channel = parse_buffer(sbus_packet);
+
+    // get pwm range for Sabertooth 1			 
+    pwm = interpolation(channel[0]);
+
+    // write data to Sabertooth 1
+    write_to_SB(sabertooth, "%d", pwm);
+
+    // closing all serial ports
+    close_file(sbus);
+    close_file(sabertooth);
+
+    return 0;
 }
