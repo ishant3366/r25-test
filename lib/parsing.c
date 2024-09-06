@@ -4,6 +4,10 @@
 // implement interpolation here
 int interpolation(uint16_t channel) {
 	// write interpolation code here
+	const uint16_t input_min = 0;   
+    const uint16_t input_max = 2047; 
+    const int output_min = 0;        
+    const int output_max = 255;      
 }
 // creating 11 bit channel
 uint16_t *parse_buffer(uint8_t buff[]) { 
