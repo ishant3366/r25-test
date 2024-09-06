@@ -1,4 +1,6 @@
 Understanding
 Describe what you understood about the problem.
 
+So what i basically figured out that the task involves controlling a Sabertooth 2x60 motor driver using data from an RC transmitter, with the data transmitted via an SBUS receiver module. The goal is to interpret the SBUS data, perform interpolation to convert the channel values into a format suitable for the Sabertooth motor driver, and then control the motor accordingly.
+
 
