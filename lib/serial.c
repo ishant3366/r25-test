@@ -36,3 +36,4 @@ void write_to_SB(FILE* file_ptr, const char* fmt, ...) {
 void close_file(FILE* file_ptr) {
     fclose(file_ptr);
 }
+
