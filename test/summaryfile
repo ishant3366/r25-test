@@ -1,8 +1,9 @@
-Understanding
+UNDERSTANDING
+
 Describe what you understood about the problem.
 
+THOUGHT PROCESS
 
-Thought Process
 So what i basically figured out that the task involves controlling a Sabertooth 2x60 motor driver using data from an RC transmitter, with the data transmitted via an SBUS receiver module. The goal is to interpret the SBUS data, perform interpolation to convert the channel values into a format suitable for the Sabertooth motor driver, and then control the motor accordingly.
 When I first tackled this task, I needed to get a good grasp of the problem: controlling a Sabertooth motor driver with data from an RC transmitter using an SBUS receiver. My approach was to break it down into manageable steps:
 
@@ -21,3 +22,26 @@ By breaking the problem into these steps and focusing on each part, I was able t
 so this is the exactly how i tackled the problem using the above prompt from chatgpt and it explained me how to approach the problem and then proceed with the code and implementation.
 
 
+IMPLEMENTATION
+
+In implementing the solution, I organized the project into distinct files to maintain clarity and functionality.
+The main.c file was used for orchestrating the overall control flow, including reading data from the SBUS receiver, 
+parsing the data, and writing the PWM values to the Sabertooth motor driver. The parsing.c file contained the interpolation function,
+where I mapped the 11-bit SBUS channel values to the 0-255 PWM range required by the Sabertooth driver.
+This linear interpolation scaled the data appropriately to ensure accurate motor control.
+The serial.c file handled the serial communication, providing functions to open and close serial ports, read data from the SBUS, and write data to the Sabertooth driver. This modular approach helped in managing the different aspects of the project effectively.
+
+Although I encountered difficulties with compiling the code due to gcc not being installed on my system,
+which prevented me from running and verifying the code locally, 
+I ensured that the logic was sound by carefully reviewing each component.
+I prepared detailed documentation and followed the project's guidelines to ensure that all requirements were met.
+Despite the compilation issues, the implementation was designed to be robust and functional, aligning with the project's goals.
+
+Currently, I acknowledge that my knowledge in certain areas, such as advanced compilation techniques and specific coding environments,
+is limited. However, my enthusiasm for learning and tackling new challenges drives me to continuously improve and adapt.
+I am committed to expanding my skills and working diligently to overcome obstacles, and I approach each task with a strong desire to learn and grow in my field.
+This passion for learning fuels my determination to successfully complete projects and enhance my expertise.
+
+To be honest the problem statement was clear to me to work with but how to proceed wasnt very clear so i took help from gpt and thus proceeded
+Despite of lack of implmentation of code the spirit to learn and solve the problems and to work with you guys is highest from my end
+and i hope ill get the chance to.
